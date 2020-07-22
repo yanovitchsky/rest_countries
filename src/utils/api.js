@@ -2,9 +2,10 @@ import axios from 'axios'
 
 const BASE_URL = 'https://restcountries.eu/rest/v2'
 
-export const get_countries = async (locale) => {
+export const get_countries = async () => {
   try {
-    const path = `${BASE_URL}/lang/${locale}`
+    // const path = `${BASE_URL}/lang/${locale}`
+    const path = `${BASE_URL}/all`
     const resp = await axios.get(path)
     return resp.data
   } catch (error) {

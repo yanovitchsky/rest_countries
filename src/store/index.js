@@ -21,6 +21,18 @@ export default new Vuex.Store({
     country: (state) => {
       return state.selectedCountry
     },
+    countriesName: (state) => {
+      return state.countries.map((country) => {
+        const translation =
+          country.translations[state.locale] === undefined
+            ? country.name
+            : country.translations[state.locale]
+        return {
+          name: country.name,
+          translation: translation,
+        }
+      })
+    },
   },
   mutations: {
     [types.SET_COUNTRIES](state, countries) {
@@ -34,15 +46,16 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    async [types.GET_COUNTRIES]({ commit, state }) {
-      const data = await get_countries(state.locale)
+    async [types.GET_COUNTRIES]({ commit }) {
+      const data = await get_countries()
       commit(types.SET_COUNTRIES, data)
     },
     [types.SET_LOCALE]({ commit }, locale) {
       commit(types.SET_LOCALE, locale)
     },
-    [types.SET_COUNTRY]({ commit }, country) {
-      commit(types.SET_COUNTRY, country)
+    async [types.SET_COUNTRY]({ commit }, country) {
+      const data = await get_country(country.alpha3Code)
+      commit(types.SET_COUNTRY, data)
     },
   },
   modules: {},

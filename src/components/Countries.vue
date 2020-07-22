@@ -14,6 +14,7 @@
       :customRow='customRow'
       :rowClassName="(record, index) => 'country-row'"
     )
+      span(slot='names', slot-scope='text, record') {{translatedName(record).translation}}
       span(slot="flags" slot-scope="text" class='parent')
         img(class='flag' :src="text" width='70' height='40')
     Details(:visible="modalShow" @close='handleClose')
@@ -37,6 +38,7 @@ const columns = [
     key: 'name',
     sorter: (a, b) => a.name.localeCompare(b.name),
     defaultSortOrder: 'ascend',
+    scopedSlots: { customRender: 'names' },
   },
   {
     title: 'Capital City',
@@ -79,7 +81,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['countries', 'selectedLocale']),
+    ...mapGetters(['countries', 'selectedLocale', 'countriesName']),
   },
   methods: {
     changeLocale(locale) {
@@ -95,6 +97,9 @@ export default {
     },
     handleClose() {
       this.modalShow = false
+    },
+    translatedName(country) {
+      return this.countriesName.find((cname) => cname.name === country.name)
     },
   },
   mounted() {
